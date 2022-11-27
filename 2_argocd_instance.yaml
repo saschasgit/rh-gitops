@@ -4,6 +4,7 @@ metadata:
   name: openshift-gitops
   namespace: openshift-gitops
 spec:
+  disableAdmin: true
   server:
     autoscale:
       enabled: false
@@ -45,6 +46,10 @@ spec:
     route:
       enabled: false
   initialSSHKnownHosts: {}
+  #dex:
+  #  openShiftOAuth: true
+  #  groups:
+  #    - cluster-admins
   sso:
     dex:
       openShiftOAuth: true
@@ -69,6 +74,7 @@ spec:
       g, system:cluster-admins, role:admin
       g, cluster-admins, role:admin
     scopes: '[groups]'
+    #Eine entsprechende Gruppe muss vorhanden sein
   repo:
     resources:
       limits:

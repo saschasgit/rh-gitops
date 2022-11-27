@@ -1,1 +1,5 @@
 https://github.com/redhat-developer/gitops-operator/blob/master/docs/OpenShift%20GitOps%20Usage%20Guide.md
+
+Der Serviceaccount von ArgoCD benötigt Rechte.
+Namespace:openshift-gitops
+Account: openshift-gitops-argocd-application-controller
