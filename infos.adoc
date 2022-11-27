@@ -8,4 +8,6 @@ Der Serviceaccount von ArgoCD benötigt keine weiteren Rechte.
 
 Damit ein Projekt von dieser ArgoCD-Instanz gemanaged werden kann, muss der Namespace des Projekts ein Label haban, damit die Rechte gewährleistet sind:
 
-argocd.argoproj.io/managed-by: openshift-gitops 
+argocd.argoproj.io/managed-by: openshift-gitops
+
+Dadurch wird ein neues Rolebinding für den Serviceaccount auf diesen Namespace erstellt.
