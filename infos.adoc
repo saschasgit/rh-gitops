@@ -7,3 +7,5 @@ User entsprechend im OpenShift den Gruppen zuordnen.
 Der Serviceaccount von ArgoCD benötigt Rechte.
 Namespace:openshift-gitops
 Account: openshift-gitops-argocd-application-controller
+oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
+(Wird auch so im Red Hat Beispiel in derem Git gemacht: https://github.com/redhat-developer/gitops-operator/blob/master/docs/OpenShift%20GitOps%20Usage%20Guide.md#via-openshift-console--)
