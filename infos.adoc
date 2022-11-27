@@ -4,10 +4,8 @@ Es muss eine Gruppe angelegt werden, die Rechte auf ArgoCD hat. Namen mit der An
 Gleiches gilt für AppProjects.
 User entsprechend im OpenShift den Gruppen zuordnen.
 
-Der Serviceaccount von ArgoCD benötigt Rechte.
-Namespace:openshift-gitops
-Account: openshift-gitops-argocd-application-controller
+Der Serviceaccount von ArgoCD benötigt keine weiteren Rechte.
 
-oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
+Damit ein Projekt von dieser ArgoCD-Instanz gemanaged werden kann, muss der Namespace des Projekts ein Label haban, damit die Rechte gewährleistet sind:
 
-(Wird auch so im Red Hat Beispiel in derem Git gemacht: https://github.com/redhat-developer/gitops-operator/blob/master/docs/OpenShift%20GitOps%20Usage%20Guide.md#via-openshift-console--)
+argocd.argoproj.io/managed-by: openshift-gitops 
