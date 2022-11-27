@@ -1,5 +1,9 @@
 https://github.com/redhat-developer/gitops-operator/blob/master/docs/OpenShift%20GitOps%20Usage%20Guide.md
 
+Es muss eine Gruppe angelegt werden, die Rechte auf ArgoCD hat. Namen mit der Angabe in der Instanz von ArgoCD abgleichen.
+Gleiches gilt für AppProjects.
+User entsprechend im OpenShift den Gruppen zuordnen.
+
 Der Serviceaccount von ArgoCD benötigt Rechte.
 Namespace:openshift-gitops
 Account: openshift-gitops-argocd-application-controller
