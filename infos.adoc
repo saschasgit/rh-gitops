@@ -38,7 +38,7 @@ Wenn man dann Gruppen für die Berechtigungen in ArgoCD definiert, muss man nat�
 
 Man kann bei der Anlage von Applikationen in ArgoCD definieren, ob ArgoCD auch gleich den Namespace mit anlegen soll. Das ist nett, aber nur bedingt hilfreich. Denn Red Hat GitOps kann dann den Namespace anlegen, aber nichts in dem Namespace ausrollen.
 
-Dies liegt nicht am Serviceaccount, der durch Red Hat GitOps angelegt wird. Der Serviceaccount von ArgoCD benötigt keine weiteren Rechte. Damit ein Projekt von dieser ArgoCD-Instanz gemanaged werden kann, muss der Namespace des Projekts ein Label haban, damit die Rechte gewährleistet sind. Der Value des Labels ist der Name des Namespaces, in der die GitOps Instanz liegt, die den Namespace managen soll:
+Dies liegt nicht am Serviceaccount, der durch Red Hat GitOps angelegt wird. Der Serviceaccount von ArgoCD benötigt keine weiteren Rechte. Damit ein Projekt von dieser ArgoCD-Instanz gemanaged werden kann, muss der Namespace des Projekts aber ein Label haben, damit die Rechte gewährleistet sind. Der Value des Labels ist der Name des Namespaces, in der die GitOps Instanz liegt, die den Namespace managen soll:
 
 [source,yaml]
 ----
