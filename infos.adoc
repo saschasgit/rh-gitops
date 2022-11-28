@@ -1,13 +1,53 @@
+
+Red Hat GitOps Operator
+
+Wenn man den Red Hat GitOps Operator nutzen möchte, um ein seitens Red Hat supportetes ArgoCD zu haben, müssen ein paar Dinge beachtet werden.
+
+Eine Dokumentation des Operators findet man hier:
+
 https://github.com/redhat-developer/gitops-operator/blob/master/docs/OpenShift%20GitOps%20Usage%20Guide.md
 
-Es muss eine Gruppe angelegt werden, die Rechte auf ArgoCD hat. Namen mit der Angabe in der Instanz von ArgoCD abgleichen.
-Gleiches gilt für AppProjects.
-User entsprechend im OpenShift den Gruppen zuordnen.
+Zunächst ist zu beachten, dass sich die DEX-Konfiguration ab Version 1.6 ändert. Im Bereich "spec" ist dann der Abschnitt "dex" deprecated und es gibt einen neuen Abschnitt "sso", in welchem die DEX Konfiguration zu beschreiben ist. Das ist Stand heute (November 2022) deswegen wichtig, weil der Channel "stable" derzeit eine 1.5.7 ausrollt, der Channel "latest" hingegen eine 1.6.2.
 
-Der Serviceaccount von ArgoCD benötigt keine weiteren Rechte.
+Der Red Hat GitOps Operator installiert in der Standardkonfiguration nicht nur den Operator, sondern auch eine erste ArgoCD Instanz im Namespace "openshift-gitops". Das ist nett gemeint und auch nützlich, um sich die Konfiguration der Instanz anzuschauen. Jedoch möchte man diese Instanz vielleicht nicht haben, weil diese eine Konfiguration hat, die einem nicht gefällt. Diese Instanz ist jedoch gemanaged und kann nicht einfach verändert werden.
 
-Damit ein Projekt von dieser ArgoCD-Instanz gemanaged werden kann, muss der Namespace des Projekts ein Label haban, damit die Rechte gewährleistet sind:
+Die Lösung ist daher, den Red Hat GitOps Operator ohne diese Instanz zu erstellen. Dies geht, indem man in die Beschreibung der Subscription die Variable "DISABLE_DEFAULT_ARGOCD_INSTANCE" auf "true" setzt:
 
-argocd.argoproj.io/managed-by: openshift-gitops
+[source,yaml]
+----
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/openshift-gitops-operator.openshift-operators: ""
+  name: openshift-gitops-operator
+  namespace: openshift-operators
+spec:
+  channel: latest
+  installPlanApproval: Automatic
+  name: openshift-gitops-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  config:
+    env:
+    - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+      value: "true"
+----
 
-Dadurch wird ein neues Rolebinding für den Serviceaccount auf diesen Namespace erstellt.
+Wenn man dann Gruppen für die Berechtigungen in ArgoCD definiert, muss man natürlich beachten, dass man auf dem Cluster Gruppen anlegt, die zu den Gruppen passen, die man in der Instanz (Ressource Kind: ArgoCD) oder in Applikationsprojekten (Ressource Kind: AppProject) definiert.
+
+Man kann bei der Anlage von Applikationen in ArgoCD definieren, ob ArgoCD auch gleich den Namespace mit anlegen soll. Das ist nett, aber nur bedingt hilfreich. Denn Red Hat GitOps kann dann den Namespace anlegen, aber nichts in dem Namespace ausrollen.
+
+Dies liegt nicht am Serviceaccount, der durch Red Hat GitOps angelegt wird. Der Serviceaccount von ArgoCD benötigt keine weiteren Rechte. Damit ein Projekt von dieser ArgoCD-Instanz gemanaged werden kann, muss der Namespace des Projekts ein Label haban, damit die Rechte gewährleistet sind:
+
+[source,yaml]
+----
+labels:
+  argocd.argoproj.io/managed-by: openshift-gitops
+----
+
+Dadurch wird ein neues Rolebinding für den Serviceaccount auf diesen Namespace erstellt und Red Hat GitOps kann Ressourcen in dem Namespace managen.
+
+Daher ist es sinnvoller, die Namespaces nicht durch die Konfiguration der ArgoCD-Applikation anlegen zu lassen, sondern als Ressource mit im Git zu hinterlegen, so dass ArgoCD diese übernimmt. ArgoCD erstellt die Ressource "Namespace" immer vor dem Ausrollen anderer Ressourcen. Die Default Reihenfolge ist: Namespace, Kubernetes Ressourcen, Custom Ressourcen. Das lässt sich aber über Sync Waves auch genauer definieren, wenn man möchte.
+
+(Es gibt verschiedene Requests in Richtung ArgoCD, um bei der Definition der ArgoCD Applikation nicht nur konfigurieren kann, dass ArgoCD den Namespace erstellt, sondern dort auch direkt Labels und Annotations mit erstellen kann, da dies in vielen Szenarien hilfreich ist, unter anderem auch Istio etc.)
