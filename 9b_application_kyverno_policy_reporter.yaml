@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-policy-reporter
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: kyverno-policy-reporter
+    server: https://kubernetes.default.svc
+  project: applications
+  source:
+    chart: policy-reporter
+    repoURL: https://kyverno.github.io/policy-reporter
+    targetRevision: 2.14.0
+    helm:
+      parameters:
+        - name: securityContext
+          value: null      
+  syncPolicy:

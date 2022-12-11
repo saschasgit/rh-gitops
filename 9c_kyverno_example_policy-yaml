@@ -1,0 +1,18 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: label-namespaces
+spec:
+  rules:
+    - name: set-namespace-yehaw-true
+      match:
+        any:
+        - resources:
+            kinds:
+            - Namespace
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              # add this label
+              yehaw: "true"
