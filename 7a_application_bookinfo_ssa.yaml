@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: bookinfo
+  name: bookinfo-ssa
   namespace: openshift-gitops
 spec:
   destination:
@@ -9,7 +9,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: applications
   source:
-    path: bookinfo
+    path: bookinfo-ssa
     repoURL: 'https://github.com/saschasgit/bookinfo-ssa.git'
     targetRevision: HEAD
   syncPolicy:
