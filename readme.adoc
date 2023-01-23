@@ -1,0 +1,236 @@
+= Red Hat GitOps Operator
+:toc:
+
+Wenn man den Red Hat GitOps Operator nutzen möchte, um ein seitens Red Hat supportetes ArgoCD zu haben, müssen ein paar Dinge beachtet werden.
+
+In diesem Repository befinden sich diverse Dateien, um testweise mit dem Red hat GitOps Operator etwas zu experimentieren. Einige Dateien sind nicht notwendig, sondern eher ein Resultat meines Mangels an Aufräumwillen. Aber alle relevanten Dateien sind hier in dieser Erläuterungen erwähnt und erklärt.
+
+Eine Dokumentation des Operators findet man hier:
+
+https://github.com/redhat-developer/gitops-operator/blob/master/docs/OpenShift%20GitOps%20Usage%20Guide.md
+
+Zunächst ist zu beachten, dass sich die DEX-Konfiguration ab Version 1.6 ändert. Im Bereich "spec" ist dann der Abschnitt "dex" deprecated und es gibt einen neuen Abschnitt "sso", in welchem die DEX Konfiguration zu beschreiben ist. Das ist Stand heute (November 2022) deswegen wichtig, weil der Channel "stable" derzeit eine 1.5.7 ausrollt, der Channel "latest" hingegen eine 1.6.2.
+
+== Installieren des Operators
+
+Datei: 1_subscription_without_default_instance.yaml
+
+Der Red Hat GitOps Operator installiert in der Standardkonfiguration nicht nur den Operator, sondern auch eine erste ArgoCD Instanz im Namespace "openshift-gitops". Das ist nett gemeint und auch nützlich, um sich die Konfiguration der Instanz anzuschauen. Jedoch möchte man diese Instanz vielleicht nicht haben, weil diese eine Konfiguration hat, die einem nicht gefällt. Diese Instanz ist jedoch gemanaged und kann nicht einfach verändert werden.
+
+Die Lösung ist daher, den Red Hat GitOps Operator ohne diese Instanz zu erstellen. Dies geht, indem man in die Beschreibung der Subscription die Variable "DISABLE_DEFAULT_ARGOCD_INSTANCE" auf "true" setzt:
+
+[source,yaml]
+----
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/openshift-gitops-operator.openshift-operators: ""
+  name: openshift-gitops-operator
+  namespace: openshift-operators
+spec:
+  channel: latest
+  installPlanApproval: Automatic
+  name: openshift-gitops-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  config:
+    env:
+    - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+      value: "true"
+----
+
+Darüber hinaus wird der Operator zunächst mit minimalen Rechten bereitgestellt und kann daher nur Ressourcen in seinem eigenen Namespace verwalten. Da dies nicht sehr hilfreich ist, kann man dies über eine Umgebungsvariable so erweitern, dass er Clusterweit tätig sein kann:
+
+[source,yaml]
+----
+  config:
+    env:
+    - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+      value: openshift-gitops
+----
+
+Beides ist hier in der erwähnten Datei so konfiguriert. Was zusätzlich beim Installieren des Operators auch ein Namespace "openshift-gitops" mit angelegt wird. In diesem wird eigentlich die Default-Instanz installiert. Das Anlegen des Namespaces wurde hier nicht deaktiviert, da dieser dann für die eigene ArgoCD Instanz genutzt wird.
+
+== Konfiguration der Instanz
+
+Datei: 2_argocd_instance.yaml
+
+Wenn man dann Gruppen für die Berechtigungen in ArgoCD definiert, muss man natürlich beachten, dass man auf dem Cluster Gruppen anlegt, die zu den Gruppen passen, die man in der Instanz (Ressource Kind: ArgoCD) oder in Applikationsprojekten (Ressource Kind: AppProject) definiert.
+
+Das Thema RBAC ist ein eigenständiges, umfassendes Thema und kann nicht im Rahmen dieser Installation erklärt werden. Diese Installation hier hat folgende Konfiguration:
+
+[source,yaml]
+----
+  rbac:
+    policy: |
+      g, system:cluster-admins, role:admin
+      g, cluster-admins, role:admin
+----
+
+Die hier gesetzten Rechte beziehen sich auf ArgoCD selbst. Wer Mitglied dieser Gruppen ist, hat Admin-Rechte in ArgoCD. Wenn Sie einen normalen User berechtigen wollen, dann erstellen Sie in OpenShift eine Gruppe "cluster-admins" und fügen Sie den OpenShift-User, der Rechte in ArgoCD haben soll, zu der Gruppe hinzu. Sie können die Gruppe natürlich auch anders nennen, müssen dann aber auch in der obigen Gruppenkonfiguration den Gruppennamen anpassen.
+
+Per Default hat ArgoCD auch einen Admin-User, der sich über die Oberfläche anmelden kann. Wie dieser zu nutzen ist, entnehmen Sie bitte der ArgoCD Dokumentation. In dieser Konfiguration wurde dieser aus Sicherheitsgründen deaktiviert:
+
+[source,yaml]
+----
+spec:
+  disableAdmin: true
+----
+
+Die weitere Konfiguration der Instanz ist die Standard-Konfiguration und daher unverändert.
+
+=== Allgemeiner Hinweis: Anlegen von Namespaces
+
+Man kann bei der Anlage von Applikationen in ArgoCD definieren, ob ArgoCD auch gleich den Namespace mit anlegen soll. Das ist nett, aber nur bedingt hilfreich. Denn Red Hat GitOps kann dann den Namespace anlegen, aber nichts in dem Namespace ausrollen.
+
+Dies liegt nicht am Serviceaccount, der durch Red Hat GitOps angelegt wird. Der Serviceaccount von ArgoCD benötigt dafür keine weiteren Rechte. Damit ein Projekt von dieser ArgoCD-Instanz gemanaged werden kann, muss der Namespace des Projekts aber ein Label haben, damit die Rechte gewährleistet sind. Der Value des Labels ist der Name des Namespaces, in der die GitOps Instanz liegt, die den Namespace managen soll:
+
+[source,yaml]
+----
+labels:
+  argocd.argoproj.io/managed-by: openshift-gitops
+----
+
+Dadurch wird ein neues Rolebinding für den Serviceaccount auf diesen Namespace erstellt und Red Hat GitOps kann Ressourcen in dem Namespace managen.
+
+Daher ist es sinnvoller, die Namespaces nicht durch die Konfiguration der ArgoCD-Applikation anlegen zu lassen, sondern als Ressource mit im Git zu hinterlegen, so dass ArgoCD diese übernimmt. ArgoCD erstellt die Ressource "Namespace" immer vor dem Ausrollen anderer Ressourcen. Die Default Reihenfolge ist: Namespace, Kubernetes Ressourcen, Custom Ressourcen. Das lässt sich aber über Sync Waves auch genauer definieren, wenn man möchte.
+
+(Es gibt verschiedene Requests in Richtung ArgoCD, um bei der Definition der ArgoCD Applikation nicht nur konfigurieren kann, dass ArgoCD den Namespace erstellt, sondern dort auch direkt Labels und Annotations mit erstellen kann, da dies in vielen Szenarien hilfreich ist, unter anderem auch Istio etc.)
+
+== Erstellen eines Applikationsprojekts
+
+Datei: 3_appproject.yaml
+
+Zunächst gibt es in ArgoCD immer das Applikationsprojekt "Default". Alle Applikationen, die nicht einem Applikationsprojekt zugewiesen werden, kommen automatisch in das Applikationsprojekt "Default".
+
+In einem Applikationsprojekt können Berechtigungen und weitere Konfigurationen für die zugehörigen Applikationen konfiguriert werden. Wer darf was in ArgoCD bei den zugewiesenen Applikationen? Welche Repositories können verwendet werden? Usw.
+
+In diesem Beispiel werden nur die Berechtigungen für die User gesetzt. Wer Mitglied der Gruppe "cluster-admins" ist, hat alle Rechte in ArgoCD bei den zu diesem Applikationsprojekt gehörenden Applikationen.
+
+[source,yaml]
+----
+  roles:
+    - description: Alle Rechte
+      groups:
+        - cluster-admins
+      name: admin
+      policies:
+        - 'p, proj:applications:admin, applications, *, applications/*, allow'
+----
+
+== Zugriff für ArgoCD auf CustomRessourceDefinitions gestatten
+
+Datei: 4_additional_role.yaml +
+Datei: 5_additional_clusterrolebinding.yaml
+
+Der ArgoCD Instanz fehlen nun noch Berechtigungen, um mit Custom Ressource Definitions umzugehen. Diese Berechtigung wird über die obigen Dateien hinzugefügt.
+
+[source,yaml]
+----
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: crd-admin
+rules:
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["*"]
+----
+
+== Erstellen des Namespaces für eine Beispielapplikation
+
+Datei: 6_namespace_bookinfo.yaml
+
+Hiiermit wird der Namespace erstellt und das Label gesetzt, womit ArgoCD zugreifen kann:
+
+[source,yaml]
+----
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: bookinfo
+  labels:
+    argocd.argoproj.io/managed-by: openshift-gitops
+----
+
+Red Hat GitOps kann die Applikation in einem OpenShift Projekt nur verwalten, wenn das obige Label gesetzt wurde. Dadurch wird automatisch ein entsprechendes Rolebinding erzeugt.
+
+== Beispielapplikation
+
+Um nun eine Beispielapplikation zu erstellen, legt man eine ArgoCD-Applikation an. Diese hat im Wesentlichen drei relevante Informationen:
+
+Destination: Der Name des OpenShift-Projekts, wo die Applikation installiert werden soll. Dazu die Angabe des Servers, damit ArgoCD zugreifen kann. Wenn ArgoCD im gleichen OpenShift-Cluster liegt, reicht für den Server die Angabe: 'https://kubernetes.default.svc'
+
+Source: Angabe des Repositories, wo die Manifeste der Applikationen liegen.
+
+SyncPolicy: Die Konfiguration, wie ArgoCD syncen soll.
+
+Wenn diese Datei ausgerollt wird, entsteht noch keine Applikation in OpenShift, da ArgoCD hier nicht automatisch synchronisiert (man könnte das automatisieren, indem man diei entsprechende Option unter SyncPolicy setzt). Aber in ArgoCD sieht man nun diese Applikation. In ArgoCD kann man nun bei der Applikation auf "Sync" klicken und die Applikation nach OpenShift ausrollen.
+
+Und damit haben wir nun eine über ArgoCD ausgerollte Applikation.
+
+== Beispiel für einen Patch
+
+Datei: 7a_application_bookinfo_ssa.yaml
+Datei: 7b_application_group_ssa.yaml
+
+Ab hier ist alles nicht mehr notwendig. Ich habe aber noch zwei Dateien hinzugefügt, um etwas zu demonstrieren.
+
+Der Red Hat Gitops Operator kann ab der Version 1.7 nicht nur Applikationen ausrollen, sondern endlich auch bestehende Ressourcen patchen. Dies geht über Server-Side-Apply.
+
+Wichtig ist hier, dass diese beiden Angaben in der SyncPolicy stehen:
+
+[source,yaml]
+----
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
+      - Validate=false
+----
+
+Die erste konfiguriert, dass hier ein Server-Side-Apply gemacht wird.
+Die zweite ist wichtig, da bei einem Patch nur ein Teil der YAML angegeben wird, eine "Partial YAML". Dies würde sonst in einem Validierungsfehler enden.
+
+Das erste Beispiel erhöht die Replicas der Produktpage:
+
+[source,yaml]
+----
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: productpage-v1
+  labels:
+    info: ssa-test
+spec:
+  replicas: 3
+----
+
+Wie man sieht, wird nur der Teil ded Deployments beschrieben, welches die Anzahl der Replicas enthält.
+
+Das zweite Beispiel kümmert sich um eine Ressource, die nicht in einem Namespace liegt, eine Gruppe. Es wird ein Label hinzugefügt.
+
+[source,yaml]
+----
+kind: Group
+apiVersion: user.openshift.io/v1
+metadata:
+  name: cluster-admins
+  labels:
+    info: ssa-test
+----
+
+Nun wird in einer ArgoCD-Applikation immer ein Namespace als "Destination" angegeben, jedoch haben wir hier eine Ressource, die nicht zu einem Namespace gehört. In diesem Fall muss ein Namespace angegeben werden, der auf dem Cluster existiert, weswegen sich natürlich "Default" anbietet. Die Ressource wird dann natürlich korrekt ohne Zugehörigkeit zu einem Namespace angelegt:
+
+[source,yaml]
+----
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: group-ssa
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: default
+----
+
