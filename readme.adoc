@@ -192,7 +192,7 @@ Wichtig ist hier, dass diese beiden Angaben in der SyncPolicy stehen:
 Die erste konfiguriert, dass hier ein Server-Side-Apply gemacht wird.
 Die zweite ist wichtig, da bei einem Patch nur ein Teil der YAML angegeben wird, eine "Partial YAML". Dies würde sonst in einem Validierungsfehler enden.
 
-Das erste Beispiel erhöht die Replicas der Produktpage:
+Das erste Beispiel erstellt eine Applikation, welches folgende Datei auf den Cluster synchronisiert und damit die Replicas der Produktpage erhöht:
 
 [source,yaml]
 ----
