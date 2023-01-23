@@ -10,7 +10,7 @@ spec:
   project: applications
   source:
     path: bookinfo-ssa
-    repoURL: 'https://github.com/saschasgit/bookinfo-ssa.git'
+    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
     targetRevision: HEAD
   syncPolicy:
     syncOptions:

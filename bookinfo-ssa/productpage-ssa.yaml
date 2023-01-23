@@ -1,0 +1,8 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: productpage-v1
+  labels:
+    info: ssa-test
+spec:
+  replicas: 3
