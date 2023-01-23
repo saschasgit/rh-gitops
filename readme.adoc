@@ -172,7 +172,7 @@ Und damit haben wir nun eine über ArgoCD ausgerollte Applikation.
 
 == Beispiel für einen Patch
 
-Datei: 7a_application_bookinfo_ssa.yaml
+Datei: 7a_application_bookinfo_ssa.yaml +
 Datei: 7b_application_group_ssa.yaml
 
 Ab hier ist alles nicht mehr notwendig. Ich habe aber noch zwei Dateien hinzugefügt, um etwas zu demonstrieren.
