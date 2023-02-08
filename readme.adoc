@@ -119,12 +119,12 @@ In diesem Beispiel werden nur die Berechtigungen für die User gesetzt. Wer Mitg
         - 'p, proj:applications:admin, applications, *, applications/*, allow'
 ----
 
-== Zugriff für ArgoCD auf CustomRessourceDefinitions gestatten
+== Zugriff für ArgoCD auf CustomRessourceDefinitions, Limitanges und ResourceQuotas gestatten
 
 Datei: 4_additional_role.yaml +
 Datei: 5_additional_clusterrolebinding.yaml
 
-Der ArgoCD Instanz fehlen nun noch Berechtigungen, um mit Custom Ressource Definitions umzugehen. Diese Berechtigung wird über die obigen Dateien hinzugefügt.
+Der ArgoCD Instanz fehlen nun noch Berechtigungen, um mit Custom Ressource Definitions, LimitRanges und ResourceQuotas umzugehen. Diese Berechtigung wird über die obigen Dateien hinzugefügt.
 
 [source,yaml]
 ----
@@ -136,6 +136,9 @@ rules:
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"]
   verbs: ["*"]
+- apiGroups: [""]
+  resources: ["limitranges","resourcequotas"]
+  verbs: ["*"] 
 ----
 
 == Erstellen des Namespaces für eine Beispielapplikation
