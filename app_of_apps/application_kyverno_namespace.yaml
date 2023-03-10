@@ -9,7 +9,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: applications
   source:
-    path: applications/kyverno
+    path: applications/kyverno_namespace
     repoURL: 'https://github.com/saschasgit/rh-gitops.git'
     targetRevision: HEAD
   syncPolicy:
