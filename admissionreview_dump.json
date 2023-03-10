@@ -213,14 +213,17 @@
         "apiVersion": "meta.k8s.io/v1",
         "kind": "UpdateOptions"
     }
-} "AdmissionResponse"={
+} 
+"AdmissionResponse"={
     "uid": "ec7b86c0-bef4-4d33-900b-6c5f77cdacff",
     "allowed": true
-} "gvk"={
+} 
+"gvk"={
     "group": "",
     "version": "v1",
     "kind": "Namespace"
-} "kind"="Namespace""name"="atest""namespace"="atest""operation"="UPDATE""uid"="ec7b86c0-bef4-4d33-900b-6c5f77cdacff""user"={
+} 
+"kind"="Namespace""name"="atest""namespace"="atest""operation"="UPDATE""uid"="ec7b86c0-bef4-4d33-900b-6c5f77cdacff""user"={
     "username": "system:serviceaccount:openshift-infra:podsecurity-admission-label-syncer-controller",
     "uid": "55f56b77-4350-4928-878e-bd46cf01bb94",
     "groups": [
