@@ -1,0 +1,231 @@
+{
+    "uid": "ec7b86c0-bef4-4d33-900b-6c5f77cdacff",
+    "kind": {
+        "group": "",
+        "version": "v1",
+        "kind": "Namespace"
+    },
+    "resource": {
+        "group": "",
+        "version": "v1",
+        "resource": "namespaces"
+    },
+    "requestKind": {
+        "group": "",
+        "version": "v1",
+        "kind": "Namespace"
+    },
+    "requestResource": {
+        "group": "",
+        "version": "v1",
+        "resource": "namespaces"
+    },
+    "name": "atest",
+    "namespace": "atest",
+    "operation": "UPDATE",
+    "userInfo": {
+        "username": "system:serviceaccount:openshift-infra:podsecurity-admission-label-syncer-controller",
+        "uid": "55f56b77-4350-4928-878e-bd46cf01bb94",
+        "groups": [
+            "system:serviceaccounts",
+            "system:serviceaccounts:openshift-infra",
+            "system:authenticated"
+        ]
+    },
+    "roles": null,
+    "clusterRoles": [
+        "system:openshift:controller:podsecurity-admission-label-syncer-controller"
+    ],
+    "object": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "metadata": {
+            "annotations": {
+                "openshift.io/description": "",
+                "openshift.io/display-name": "",
+                "openshift.io/requester": "kubeadmin",
+                "openshift.io/sa.scc.mcs": "s0:c29,c19",
+                "openshift.io/sa.scc.supplemental-groups": "1000850000/10000",
+                "openshift.io/sa.scc.uid-range": "1000850000/10000"
+            },
+            "creationTimestamp": "2023-03-10T18:05:33Z",
+            "labels": {
+                "kubernetes.io/metadata.name": "atest",
+                "pod-security.kubernetes.io/audit": "restricted",
+                "pod-security.kubernetes.io/audit-version": "v1.24",
+                "pod-security.kubernetes.io/warn": "restricted",
+                "pod-security.kubernetes.io/warn-version": "v1.24"
+            },
+            "managedFields": [
+                {
+                    "apiVersion": "v1",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:metadata": {
+                            "f:annotations": {
+                                "f:openshift.io/sa.scc.mcs": {},
+                                "f:openshift.io/sa.scc.supplemental-groups": {},
+                                "f:openshift.io/sa.scc.uid-range": {}
+                            },
+                            "f:labels": {
+                                "f:pod-security.kubernetes.io/audit": {},
+                                "f:pod-security.kubernetes.io/audit-version": {},
+                                "f:pod-security.kubernetes.io/warn": {},
+                                "f:pod-security.kubernetes.io/warn-version": {}
+                            }
+                        }
+                    },
+                    "manager": "cluster-policy-controller",
+                    "operation": "Update",
+                    "time": "2023-03-10T18:05:33Z"
+                },
+                {
+                    "apiVersion": "v1",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:metadata": {
+                            "f:annotations": {
+                                ".": {},
+                                "f:openshift.io/description": {},
+                                "f:openshift.io/display-name": {},
+                                "f:openshift.io/requester": {}
+                            },
+                            "f:labels": {
+                                ".": {},
+                                "f:kubernetes.io/metadata.name": {}
+                            }
+                        }
+                    },
+                    "manager": "openshift-apiserver",
+                    "operation": "Update",
+                    "time": "2023-03-10T18:05:33Z"
+                },
+                {
+                    "apiVersion": "v1",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:spec": {
+                            "f:finalizers": {}
+                        }
+                    },
+                    "manager": "openshift-controller-manager",
+                    "operation": "Update",
+                    "subresource": "finalize",
+                    "time": "2023-03-10T18:05:33Z"
+                }
+            ],
+            "name": "atest",
+            "resourceVersion": "66566",
+            "uid": "c5930442-822c-4dea-bc27-59594e2f1562"
+        },
+        "spec": {
+            "finalizers": [
+                "kubernetes"
+            ]
+        },
+        "status": {
+            "phase": "Active"
+        }
+    },
+    "oldObject": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "metadata": {
+            "annotations": {
+                "openshift.io/description": "",
+                "openshift.io/display-name": "",
+                "openshift.io/requester": "kubeadmin",
+                "openshift.io/sa.scc.mcs": "s0:c29,c19",
+                "openshift.io/sa.scc.supplemental-groups": "1000850000/10000",
+                "openshift.io/sa.scc.uid-range": "1000850000/10000"
+            },
+            "creationTimestamp": "2023-03-10T18:05:33Z",
+            "labels": {
+                "kubernetes.io/metadata.name": "atest"
+            },
+            "managedFields": [
+                {
+                    "apiVersion": "v1",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:metadata": {
+                            "f:annotations": {
+                                "f:openshift.io/sa.scc.mcs": {},
+                                "f:openshift.io/sa.scc.supplemental-groups": {},
+                                "f:openshift.io/sa.scc.uid-range": {}
+                            }
+                        }
+                    },
+                    "manager": "cluster-policy-controller",
+                    "operation": "Update",
+                    "time": "2023-03-10T18:05:33Z"
+                },
+                {
+                    "apiVersion": "v1",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:metadata": {
+                            "f:annotations": {
+                                ".": {},
+                                "f:openshift.io/description": {},
+                                "f:openshift.io/display-name": {},
+                                "f:openshift.io/requester": {}
+                            },
+                            "f:labels": {
+                                ".": {},
+                                "f:kubernetes.io/metadata.name": {}
+                            }
+                        }
+                    },
+                    "manager": "openshift-apiserver",
+                    "operation": "Update",
+                    "time": "2023-03-10T18:05:33Z"
+                },
+                {
+                    "apiVersion": "v1",
+                    "fieldsType": "FieldsV1",
+                    "fieldsV1": {
+                        "f:spec": {
+                            "f:finalizers": {}
+                        }
+                    },
+                    "manager": "openshift-controller-manager",
+                    "operation": "Update",
+                    "subresource": "finalize",
+                    "time": "2023-03-10T18:05:33Z"
+                }
+            ],
+            "name": "atest",
+            "resourceVersion": "66566",
+            "uid": "c5930442-822c-4dea-bc27-59594e2f1562"
+        },
+        "spec": {
+            "finalizers": [
+                "kubernetes"
+            ]
+        },
+        "status": {
+            "phase": "Active"
+        }
+    },
+    "dryRun": false,
+    "options": {
+        "apiVersion": "meta.k8s.io/v1",
+        "kind": "UpdateOptions"
+    }
+} "AdmissionResponse"={
+    "uid": "ec7b86c0-bef4-4d33-900b-6c5f77cdacff",
+    "allowed": true
+} "gvk"={
+    "group": "",
+    "version": "v1",
+    "kind": "Namespace"
+} "kind"="Namespace""name"="atest""namespace"="atest""operation"="UPDATE""uid"="ec7b86c0-bef4-4d33-900b-6c5f77cdacff""user"={
+    "username": "system:serviceaccount:openshift-infra:podsecurity-admission-label-syncer-controller",
+    "uid": "55f56b77-4350-4928-878e-bd46cf01bb94",
+    "groups": [
+        "system:serviceaccounts",
+        "system:serviceaccounts:openshift-infra",
+        "system:authenticated"
+    ]
+}
