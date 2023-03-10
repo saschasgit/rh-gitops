@@ -1,7 +1,7 @@
 # -- Internal settings used with `helm template` to generate install manifest
 # @ignored
 templating:
-  enabled: false
+  enabled: true
   debug: false
   version:
 
