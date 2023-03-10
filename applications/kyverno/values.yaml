@@ -1,7 +1,7 @@
 # -- Internal settings used with `helm template` to generate install manifest
 # @ignored
 templating:
-  enabled: true
+  enabled: false
   debug: false
   version:
 
@@ -81,7 +81,7 @@ testImage:
   pullPolicy:
 
 # -- (int) Desired number of pods
-replicaCount: 3
+replicaCount: 1
 
 # -- Additional labels to add to each pod
 podLabels: {}
