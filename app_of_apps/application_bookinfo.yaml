@@ -9,12 +9,12 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: applications
   source:
-    path: bookinfo
-    repoURL: 'https://github.com/saschasgit/bookinfo.git'
+    path: applications/bookinfo
+    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
     targetRevision: HEAD
   syncPolicy:
     syncOptions:
-      - CreateNamespace=true
-    managedNamespaceMetadata:
-      labels: # The labels to set on the application namespace
-        argocd.argoproj.io/managed-by: openshift-gitops
+#      - CreateNamespace=true
+#    managedNamespaceMetadata:
+#      labels: # The labels to set on the application namespace
+#        argocd.argoproj.io/managed-by: openshift-gitops
