@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bookinfo
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: bookinfo
+    server: 'https://kubernetes.default.svc'
+  project: applications
+  source:
+    path: applications/bookinfo
+    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+#      - CreateNamespace=true
+#    managedNamespaceMetadata:
+#      labels: # The labels to set on the application namespace
+#        argocd.argoproj.io/managed-by: openshift-gitops
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: kyverno
+    server: https://kubernetes.default.svc
+  project: applications
+  source:
+    chart: kyverno
+    repoURL: https://kyverno.github.io/kyverno
+    targetRevision: 2.6.0
+    helm:
+      parameters:
+        - name: securityContext
+          value: null
+        - name: replicaCount
+          value: "3"
+  syncPolicy:
+    syncOptions:
+      - Replace=true
