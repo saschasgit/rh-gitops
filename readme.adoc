@@ -98,7 +98,7 @@ Dadurch wird ein neues Rolebinding für den Serviceaccount auf diesen Namespace 
 
 Daher ist es sinnvoller, die Namespaces nicht durch die Konfiguration der ArgoCD-Applikation anlegen zu lassen, sondern als Ressource mit im Git zu hinterlegen, so dass ArgoCD diese übernimmt. ArgoCD erstellt die Ressource "Namespace" immer vor dem Ausrollen anderer Ressourcen. Die Default Reihenfolge ist: Namespace, Kubernetes Ressourcen, Custom Ressourcen. Das lässt sich aber über Sync Waves auch genauer definieren, wenn man möchte.
 
-(Es gibt verschiedene Requests in Richtung ArgoCD, um bei der Definition der ArgoCD Applikation nicht nur konfigurieren kann, dass ArgoCD den Namespace erstellt, sondern dort auch direkt Labels und Annotations mit erstellen kann, da dies in vielen Szenarien hilfreich ist, unter anderem auch Istio etc.)
+(In der neuen Version von ArgoCD gibt es die Möglichkeit, dass man bei der Definition der ArgoCD Applikation nicht nur konfigurieren kann, dass ArgoCD den Namespace erstellt, sondern dort auch direkt Labels und Annotations mit erstellen kann, da dies in vielen Szenarien hilfreich ist, unter anderem auch Istio etc. Dies ist jedoch in der aktuellen Version des Red Hat GitOps Operators noch nicht umgesetzt. https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/ )
 
 == Erstellen eines Applikationsprojekts
 
