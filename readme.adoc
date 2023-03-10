@@ -56,6 +56,8 @@ Beides ist hier in der erwähnten Datei so konfiguriert. Was zusätzlich beim In
 
 Datei: 2_argocd_instance.yaml
 
+Zunächst muss der Name der Instanz geändert werden. Es sollte nicht der Standardname "openshift-gitops" sein. Da der Operator so konfiguriert wurde, dass keine Standardinstanz installiert wird, würde er die Instanz mit dem Namen "openshift-gitops" bei einem Update löschen.
+
 Wenn man dann Gruppen für die Berechtigungen in ArgoCD definiert, muss man natürlich beachten, dass man auf dem Cluster Gruppen anlegt, die zu den Gruppen passen, die man in der Instanz (Ressource Kind: ArgoCD) oder in Applikationsprojekten (Ressource Kind: AppProject) definiert.
 
 Das Thema RBAC ist ein eigenständiges, umfassendes Thema und kann nicht im Rahmen dieser Installation erklärt werden. Diese Installation hier hat folgende Konfiguration:
