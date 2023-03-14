@@ -10,7 +10,6 @@ spec:
       - resources:
           kinds:
           - pods
-      - resources:
           namespaces:
           - bookinfo
     # The `validate` statement tries to positively check what is defined. If the statement, when compared with the requested resource, is true, it is allowed. If false, it is blocked.
