@@ -143,9 +143,147 @@ rules:
   verbs: ["*"] 
 ----
 
-== Erstellen des Namespaces für eine Beispielapplikation
+== Einfaches Secret Management mit GitOps
 
-Datei: 6_application_app_of_apps.yaml
+Wenn man mit OpenShift arbeitet, benötigt man auch Secrets. Diese möchte man aber nicht einfach so in seinem Git ablegen. Es gibt zahlreiche professionelle Tools, um dies zu lösen. Sowohl die Cloudprovider bieten hier Lösungen an (z.B. Azure Vault) als auch andere Anbieter wie das Hashicorp Vault. Jedoch möchte man, wenn man privat ein wenig experimentiert, oft keine derart große und Umfangreiche Lösung haben. Hier bietet sich das Gespann "Mozilla SOPS" und "AGE" an. Red Hat hat eine sehr schöne Anleitung geschrieben, wie man dies in sein GitOps integriert:
+
+https://cloud.redhat.com/blog/a-guide-to-gitops-and-secret-management-with-argocd-operator-and-sops
+
+Dazu installiert man sich einmal "Age" auf dem eigenen PC. ("Age" wird dabei Deutsch, nicht Englisch ausgesprochen.): https://github.com/FiloSottile/age#installation
+
+Nun erstellt man sich einen Public und einen Private Key mit Age und speichert diesen in einer Datei:
+
+[source]
+----
+age-keygen -o age.agekey
+----
+
+Der Public Key wird dabei direkt angezeigt, beide Keys werden in der erstellten Datei gespeichert. Diesen Private Key müssen wir in unserem OpenShift im Namespace von Gitops hinterlegen:
+
+[source]
+----
+oc create secret generic sops-age --namespace=openshift-gitops --from-file=key.txt=age.agekey
+----
+
+Jetzt passen wir die Installation unserer GitOps Instanz an. Dazu als einfachen Weg die YAML der GitOps Instanz über die Weboberfläche des Clusters aufrufen und etwas im Abschnitt "repo" hinzufügen. Dadurch wird das eben erstellte Secret gemounted und über einen Init-Container "ksops" installiert. KSOPS dient dazu, unsere Secrets am Ende wieder zu entschlüsseln. Die Dinge, die bereits im Abschnitt "repo" stehen, bleiben dort auch stehen. Das unten stehende kommt lediglich zusätzlich in diesen Abschnitt:
+
+[source,yaml]
+----
+  repo:
+    env:
+    - name: XDG_CONFIG_HOME
+      value: /.config
+    - name: SOPS_AGE_KEY_FILE
+      value: /.config/sops/age/keys.txt
+    volumes:
+    - name: custom-tools
+      emptyDir: {}
+    - name: sops-age
+      secret:
+        secretName: sops-age
+    initContainers:
+    - name: install-ksops
+      image: viaductoss/ksops:v3.0.2
+      command: ["/bin/sh", "-c"]
+      args:
+      - 'echo "Installing KSOPS..."; cp ksops /custom-tools/; cp $GOPATH/bin/kustomize /custom-tools/; echo "Done.";'
+      volumeMounts:
+        - mountPath: /custom-tools
+          name: custom-tools
+    volumeMounts:
+    - mountPath: /usr/local/bin/kustomize
+      name: custom-tools
+      subPath: kustomize
+    - mountPath: /.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+      name: custom-tools
+      subPath: ksops
+    - mountPath: /.config/sops/age/keys.txt
+      name: sops-age
+      subPath: keys.txt
+----
+
+Nun installieren wir uns auf dem eigenen PC noch SOPS: https://github.com/mozilla/sops/releases
+
+Als einfaches Beispiel wollen wir einfach ein Secret verschlüsselt im Git hinterlegen und dann auf den Cluster mit GitOps so ausrollen, dass das Secret entschlüsselt im Cluster liegt.
+
+Ordner: my-secret
+
+Wir erstellen zunächst die Datei, die eine Regel für SOPS hinterlegt:
+
+Dateiname: ".sops.yaml" (direkt im Ordner "my-secret", nicht im Unterordner "my-app")
+
+[source]
+----
+creation_rules:
+  - path_regex: .*\.sops\.ya?ml
+    encrypted_regex: "^(data|stringData)$"
+    age: age1j8r0n4pr8f4uzcd7g84zac45xl8jv8jqhj7uv3f4s0ep43yhh5vsxr7lcc----
+----
+
+Die hier angegebene "path_regex" bedeutet, nach beliebigen Dateien (.*) sucht, die dann mit ".sops.yaml" oder ".sops.yml" enden. Beispielsweise eben einer Datei namens "my_secret.sops.yaml"
+Ins Feld "age" kommt der Public Key, den uns Age vorhin angezeigt hat und der auch in der von Age erstellten Datei zu finden ist.
+
+Nun benötigen wir irgendein Secret. Hier ein Beispiel:
+
+Dateiname: my_secret.sops.yaml
+
+[source]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+stringData:
+  username: admin
+  password: totalgeheim
+----
+
+Dieses Secret verschlüsseln wir nun mit SOPS auf dem eigenen PC. Dazu führen wir im Ordner "my_secret" diesen Befehl aus:
+
+[source]
+----
+sops --encrypt --in-place .\my_secret.sops.yaml
+----
+
+SOPS sucht dabei automatisch nach der Konfigurationsdatei mit dem Namen ".sops.yaml", so dass wir dem Befehl keine weiteren Parameter mitgeben müssen. Dabei wird die Datei verschlüsselt und unter dem gleichen Namen (--in-place) wieder gespeichert. Unser Secret sieht nun so aus:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+    name: mysecret
+type: Opaque
+stringData:
+    username: ENC[AES256_GCM,data:FpB+53Q=,iv:fka8v2hqD+/GQL5nr+FC1berFiy8+SWonJaNM3eS1nA=,tag:k2zdZw6iklTzD92bJGucSg==,type:str]
+    password: ENC[AES256_GCM,data:bqXmWW95zj4SJxI=,iv:ePPJnSBp6KCvulps61Z21YPn1w+w+ug/RTPYAh4Lac0=,tag:B+Vs5pDSONhnKmQRp7UZ4w==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1j8r0n4pr8f4uzcd7g84zac45xl8jv8jqhj7uv3f4s0ep43yhh5vsxr7lcc
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBlb2EwY0pKVGU4TzNOc09X
+            MktBZjhqbmhKcWJLVzFoRUNyOFJ5cDdITDFNCkJnVWcrVXhialU0V2lVNUlDRWZD
+            KzhBVm8vN090R29SMld4cXh2aXphdW8KLS0tIG9wOHNTL0kyQTA4cHV4UHZPNVlJ
+            M0FiL2UyWis1eDk4TFNpMVcwQzFtbzQKFjFT7FAAptXZbLCUTdTpZD21b5QODw+Q
+            pM9wreHRId8fUsVYle/3yYB0jlzSxpym+O/Sk+cxseveuuXn2fphsg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2023-03-19T15:05:50Z"
+    mac: ENC[AES256_GCM,data:u0oTVY1UbvEFBj/pBShi1/Ys2mVxe2MiGwDZI6TigCskOrDu7zVDZ9BZxRnmmy+bBvpvzPSriwVuiM/9LSgSw3bSmcDsWKCUwPTVukOfNvQm9t3XEe0WG2R4m4S3Wlztl9ttIEzniMkoqhTtuLsuL3GHxRj5akKwAkxn6jAuN/M=,iv:C93R9pkdCsYzT4Gt0vlapaHT/O7t3HDVMat9HGljoK4=,tag:QOCGIC+9Fs1ZDgCMXUm2CA==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.3
+----
+
+
+== Erstellen einer App of Apps
+
+Datei: 7_application_app_of_apps.yaml
 
 Man könnte nun einzelne ArgoCD Applications für jede Applikation manuell installieren. Einfach wird dies, wenn wir eine "App of Apps" nutzen.
 
@@ -190,8 +328,8 @@ Und damit haben wir nun eine über ArgoCD ausgerollte Applikation.
 
 == Beispiel für einen Patch
 
-Datei: 7a_application_bookinfo_ssa.yaml +
-Datei: 7b_application_group_ssa.yaml
+Datei: 8a_application_bookinfo_ssa.yaml +
+Datei: 8b_application_group_ssa.yaml
 
 Ich habe aber noch zwei Dateien hinzugefügt, um etwas zu demonstrieren.
 
