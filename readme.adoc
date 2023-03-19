@@ -145,21 +145,34 @@ rules:
 
 == Erstellen des Namespaces für eine Beispielapplikation
 
-Datei: 6_namespace_bookinfo.yaml
+Datei: 6_application_app_of_apps.yaml
 
-Hiiermit wird der Namespace erstellt und das Label gesetzt, womit ArgoCD zugreifen kann:
+Man könnte nun einzelne ArgoCD Applications für jede Applikation manuell installieren. Einfach wird dies, wenn wir eine "App of Apps" nutzen.
+
+Wir hinterlegen dazu alle unsere ArgoCD Application Yaml Dateien in einem Ordner in unserem Git (hier in diesem Repostitory der Ordner "app_of_apps"). Dann schreiben wir eine einzige ArgoCD Application Yaml, die auf diesen Ordner als Quelle verweist (eine kleine Erklärung folgt im Anschluss):
 
 [source,yaml]
 ----
-kind: Project
-apiVersion: project.openshift.io/v1
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: bookinfo
-  labels:
-    argocd.argoproj.io/managed-by: openshift-gitops
+  name: app-of-apps
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: openshift-gitops
+    server: 'https://kubernetes.default.svc'
+  project: applications
+  source:
+    path: app_of_apps
+    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
 ----
 
-Red Hat GitOps kann die Applikation in einem OpenShift Projekt nur verwalten, wenn das obige Label gesetzt wurde. Dadurch wird automatisch ein entsprechendes Rolebinding erzeugt.
+Wenn wir dann ArgoCD starten, ist zunächst nur eine Applikation vorhanden, diese "app-of-apps". Sobald wir diese synchronisieren, werden die Applikationen, für die wir im "app_of_apps" Ordner ArgoCD Application Yamls hinterlegt haben, als Applikationen im ArgoCD erscheinen.
+
 
 == Beispielapplikation
 
@@ -180,7 +193,7 @@ Und damit haben wir nun eine über ArgoCD ausgerollte Applikation.
 Datei: 7a_application_bookinfo_ssa.yaml +
 Datei: 7b_application_group_ssa.yaml
 
-Ab hier ist alles nicht mehr notwendig. Ich habe aber noch zwei Dateien hinzugefügt, um etwas zu demonstrieren.
+Ich habe aber noch zwei Dateien hinzugefügt, um etwas zu demonstrieren.
 
 Der Red Hat Gitops Operator kann ab der Version 1.7 nicht nur Applikationen ausrollen, sondern endlich auch bestehende Ressourcen patchen. Dies geht über Server-Side-Apply.
 
