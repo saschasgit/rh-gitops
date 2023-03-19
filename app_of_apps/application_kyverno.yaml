@@ -6,12 +6,18 @@ metadata:
 spec:
   destination:
     namespace: kyverno
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
   project: applications
   source:
-    path: applications/kyverno
-    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
-    targetRevision: HEAD
+    chart: kyverno
+    repoURL: https://kyverno.github.io/kyverno
+    targetRevision: 2.6.0
+    helm:
+      parameters:
+        - name: securityContext
+          value: null
+        - name: replicaCount
+          value: "3"
   syncPolicy:
     syncOptions:
       - Replace=true

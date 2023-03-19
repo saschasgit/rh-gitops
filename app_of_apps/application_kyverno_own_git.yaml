@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-own_git
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: kyverno
+    server: 'https://kubernetes.default.svc'
+  project: applications
+  source:
+    path: applications/kyverno
+    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+      - Replace=true
