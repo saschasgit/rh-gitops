@@ -7,5 +7,5 @@ rules:
   resources: ["customresourcedefinitions"]
   verbs: ["*"]
 - apiGroups: [""]
-  resources: ["limitranges","resourcequotas"]
+  resources: ["limitranges","resourcequotas","secrets"]
   verbs: ["*"]

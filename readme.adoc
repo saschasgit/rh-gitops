@@ -162,7 +162,7 @@ Der Public Key wird dabei direkt angezeigt, beide Keys werden in der erstellten 
 
 [source]
 ----
-oc create secret generic sops-age --namespace=openshift-gitops --from-file=key.txt=age.agekey
+oc create secret generic sops-age --namespace=openshift-gitops --from-file=keys.txt=age.agekey
 ----
 
 Jetzt passen wir die Installation unserer GitOps Instanz an. Dazu als einfachen Weg die YAML der GitOps Instanz über die Weboberfläche des Clusters aufrufen und etwas im Abschnitt "repo" hinzufügen. Dadurch wird das eben erstellte Secret gemounted und über einen Init-Container "ksops" installiert. KSOPS dient dazu, unsere Secrets am Ende wieder zu entschlüsseln. Die Dinge, die bereits im Abschnitt "repo" stehen, bleiben dort auch stehen. Das unten stehende kommt lediglich zusätzlich in diesen Abschnitt:
