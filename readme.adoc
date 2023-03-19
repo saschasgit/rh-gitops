@@ -227,12 +227,13 @@ Nun benötigen wir irgendein Secret. Hier ein Beispiel:
 
 Dateiname: my_secret.sops.yaml
 
-[source]
+[source,yaml]
 ----
 apiVersion: v1
 kind: Secret
 metadata:
   name: mysecret
+  namespace: my-secret
 type: Opaque
 stringData:
   username: admin
@@ -254,6 +255,7 @@ apiVersion: v1
 kind: Secret
 metadata:
     name: mysecret
+    namespace: my-secret
 type: Opaque
 stringData:
     username: ENC[AES256_GCM,data:FpB+53Q=,iv:fka8v2hqD+/GQL5nr+FC1berFiy8+SWonJaNM3eS1nA=,tag:k2zdZw6iklTzD92bJGucSg==,type:str]
@@ -280,6 +282,32 @@ sops:
     version: 3.7.3
 ----
 
+Damit GitOps unser Secret am Ende auch wieder entschlüsseln kann, benötigen wir einen Kustomize Generator für Gitops. Dazu brauchen wir zwei weitere Dateien im Ordner "my_secret":
+
+Datei: secret-generator.yaml
+
+[source,yaml]
+----
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  # Specify a name
+  name: example-secret-generator
+files:
+  - ./my_secret.sops.yaml
+----
+
+In dieser Datei sind im Abschnitt Files die Secrets aufgelistet, die entschlüsselt werden sollen.
+
+Datei: kustomization.yaml
+
+[source,yaml]
+----
+generators:
+  - ./secret-generator.yaml
+----
+
+Zusätzlich befindet sich noch eine Yaml im Ordner, die den Namespace "my-secret" erzeugt. Im Ordner "app_of_apps" befindet sich die ArgoCD Application, die das ganze dann auf dem Cluster ausrollt.
 
 == Erstellen einer App of Apps
 
