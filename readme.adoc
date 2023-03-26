@@ -220,7 +220,7 @@ creation_rules:
     age: age1j8r0n4pr8f4uzcd7g84zac45xl8jv8jqhj7uv3f4s0ep43yhh5vsxr7lcc----
 ----
 
-Die hier angegebene "path_regex" bedeutet, nach beliebigen Dateien (.*) sucht, die dann mit ".sops.yaml" oder ".sops.yml" enden. Beispielsweise eben einer Datei namens "my_secret.sops.yaml"
+Die hier angegebene "path_regex" bedeutet, nach beliebigen Dateien (.*) sucht, die dann mit ".sops.yaml" oder ".sops.yml" enden. Beispielsweise eben eine Datei namens "my_secret.sops.yaml"
 Ins Feld "age" kommt der Public Key, den uns Age vorhin angezeigt hat und der auch in der von Age erstellten Datei zu finden ist.
 
 Nun benötigen wir irgendein Secret. Hier ein Beispiel:
