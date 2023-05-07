@@ -9,7 +9,7 @@ metadata:
     policies.kyverno.io/subject: BuildConfig
     policies.kyverno.io/description: >-
       If a BuildConfig does not specify at least resource requests it can happen
-      that the build will be slow because the default-values of the quotas settings
+      that the build will be slow because the default-values of the limitranges settings
       will be applied.
       This policy checks if settings for memory and cpu requests are available and if not
       applies the settings below.
