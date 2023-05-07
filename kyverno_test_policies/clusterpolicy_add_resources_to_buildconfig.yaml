@@ -14,7 +14,7 @@ metadata:
       This policy checks if settings for memory and cpu requests are available and if not
       applies the settings below.
       This policy will exclude all namespaces that start with "openshift" or "kube".
-      IMPORTANT: The setting "schemaValidation: false" is because of a buf in the actual
+      IMPORTANT: The setting "schemaValidation: false" is because of a bug in the actual
       kyverno version and can be deleted in 1.9+.
       IMPORTANT: If there is no nodeselector or the nodeselector is set to "null", than
       this version of kyverno shows in the annotation of the buildconfig "removed /spec/nodeSelector".

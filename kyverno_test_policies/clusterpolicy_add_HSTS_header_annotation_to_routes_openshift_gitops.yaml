@@ -15,7 +15,7 @@ metadata:
       updated in the namespace "openshift-gitops".
       This additional clusterpolicy was created because the main policy for HSTS headers
       will not apply to all namespaces beginning with "openshift".
-      IMPORTANT: The setting "schemaValidation: false" is because of a buf in the actual
+      IMPORTANT: The setting "schemaValidation: false" is because of a bug in the actual
       kyverno version and can be deleted in 1.9+.
 spec:
   background: false

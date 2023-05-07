@@ -14,7 +14,7 @@ metadata:
       This clusterpolicy will add the HSTS header to all routes that are created or
       updated.
       All namespaces that begin with "openshift" or "kube" are excluded.
-      IMPORTANT: The setting "schemaValidation: false" is because of a buf in the actual
+      IMPORTANT: The setting "schemaValidation: false" is because of a bug in the actual
       kyverno version and can be deleted in 1.9+.
 spec:
   background: false
