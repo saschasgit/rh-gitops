@@ -1,0 +1,46 @@
+apiVersion : kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-hsts-header-annotation-to-routes
+  annotations:
+    policies.kyverno.io/title: Add HSTS-Header Annotation to Routes
+    policies.kyverno.io/category: Other
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Route
+    policies.kyverno.io/description: >-
+      If a HSTS header is required through settings in the default cluster ingress
+      it may happen that routes are automatically created by other resources
+      and the header could not be set directly in the configuration (e.g. some operators).
+      This clusterpolicy will add the HSTS header to all routes that are created or
+      updated.
+      All namespaces that begin with "openshift" or "kube" are excluded.
+      IMPORTANT: The setting "schemaValidation: false" is because of a buf in the actual
+      kyverno version and can be deleted in 1.9+.
+spec:
+  background: false
+  schemaValidation: false
+  rules:
+  - name: add-hsts-header-annotation-to-routes
+    match:
+      any:
+      - resources:
+          kinds:
+          - route.openshift.io/v1/Route
+    exclude:
+      any:
+      - resources:
+          namespaces:
+          - openshift*
+          - kube*
+    preconditions:
+      any:
+      - key: "{{request.operation || 'BACKGROUND'}}"
+        operator: AnyIn
+        value:
+        - CREATE
+        - UPDATE
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          annotations:
+            +(haproxy.router.openshift.io/hsts_header): max-age=31536000
