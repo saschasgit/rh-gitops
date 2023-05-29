@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: namespace-configurator-testgroup
+  namespace: namespace-configuration-operator
+spec:
+  destination:
+    namespace: namespace-configuration-operator
+    server: 'https://kubernetes.default.svc'
+  project: applications
+  source:
+    path: testgroup
+    repoURL: 'https://github.com/saschasgit/rh-gitops_and_namespaces.git'
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
