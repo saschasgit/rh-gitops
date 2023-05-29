@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: namespace-configurator-testgroup
-  namespace: namespace-configuration-operator
+  namespace: openshift-gitops
 spec:
   destination:
     namespace: namespace-configuration-operator
