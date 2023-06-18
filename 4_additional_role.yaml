@@ -9,3 +9,6 @@ rules:
 - apiGroups: [""]
   resources: ["limitranges","resourcequotas","secrets"]
   verbs: ["*"]
+- apiGroups: ["kyverno.io"]
+  resources: ["*"]
+  verbs: ["*"]
