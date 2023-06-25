@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.subscription | quote }}
   name: neuvector-certified-operator
-  namespace: {{ $.Values.operators.neuvector.namespace | quote }}
+  namespace: openshift-operators
 spec:
   channel: beta
   installPlanApproval: Manual

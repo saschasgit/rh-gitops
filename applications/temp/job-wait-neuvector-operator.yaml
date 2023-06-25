@@ -21,7 +21,7 @@ spec:
               export HOME=/tmp/clo
               echo ""
               echo -n "Waiting for the Neuvector CRD to be available."
-              until oc wait --for condition=established --timeout=60s crd/jaegers.jaegertracing.io -n {{ $.Values.operators.neuvector.namespace | quote }}
+              until oc wait --for condition=established --timeout=60s crd/neuvectors.apm.neuvector.com -n {{ $.Values.operators.neuvector.namespace | quote }}
               do
                 echo -n "---still waiting"
                 sleep $SLEEP
