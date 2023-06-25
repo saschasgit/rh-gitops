@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   annotations:
     argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.role | quote }}
-  name: job-wait-servicemesh-operator-role
+  name: job-wait-neuvector-operator-role
 rules:
   - verbs:
       - get
