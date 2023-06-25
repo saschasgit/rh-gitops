@@ -5,15 +5,11 @@ metadata:
   namespace: openshift-gitops
 spec:
   destination:
-    namespace: a-neuvector
     server: 'https://kubernetes.default.svc'
   project: applications
   source:
     path: applications/neuvector
     repoURL: 'https://github.com/saschasgit/rh-gitops.git'
     targetRevision: HEAD
-    helm:
-      valueFiles:
-        - values.yaml
   syncPolicy:
     syncOptions:
