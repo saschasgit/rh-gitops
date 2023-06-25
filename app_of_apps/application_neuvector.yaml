@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: neuvector
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: a-neuvector
+    server: 'https://kubernetes.default.svc'
+  project: applications
+  source:
+    path: applications/neuvector
+    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
