@@ -3,6 +3,8 @@ kind: Job
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: {{ $.Values.syncwaves.patch | quote }}
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
   name: patch-neuvector-operators
   namespace: {{ $.Values.operators.neuvector.namespace | quote }}
 spec:
