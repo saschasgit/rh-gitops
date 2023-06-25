@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: {{ $.Values.sync-waves.job | quote }}
+    argocd.argoproj.io/sync-wave: {{ $.Values.syncwaves.job | quote }}
   name: wait-neuvector-crd
   namespace: {{ $.Values.operators.neuvector.namespace | quote }}
 spec:

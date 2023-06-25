@@ -4,7 +4,7 @@ metadata:
   labels:
     operators.coreos.com/neuvector-certified-operator.atos-neuvector: ""
   annotations:
-    argocd.argoproj.io/sync-wave: {{ $.Values.sync-waves.subscription | quote }}
+    argocd.argoproj.io/sync-wave: {{ $.Values.syncwaves.subscription | quote }}
   name: neuvector-certified-operator
   namespace: openshift-operators
 spec:

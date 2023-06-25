@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: job-wait-neuvector-operator-crb
   annotations:
-    argocd.argoproj.io/sync-wave: {{ $.Values.sync-waves.rolebinding | quote }}
+    argocd.argoproj.io/sync-wave: {{ $.Values.syncwaves.rolebinding | quote }}
 subjects:
   - kind: ServiceAccount
     name: job-wait-neuvector-operator-sa

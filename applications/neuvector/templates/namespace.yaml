@@ -3,6 +3,6 @@ kind: Namespace
 metadata:
   name: {{ $.Values.operators.neuvector.namespace | quote }}
   annotations:
-    argocd.argoproj.io/sync-wave: {{ $.Values.sync-waves.namespace | quote }}
+    argocd.argoproj.io/sync-wave: {{ $.Values.syncwaves.namespace | quote }}
   labels:
     argocd.argoproj.io/managed-by: openshift-gitops
