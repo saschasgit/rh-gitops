@@ -1,0 +1,13 @@
+syncwaves:
+  namespace: -2000
+  operatorgroup: -1900
+  subscription: -1800
+  role: -1700
+  serviceaccount: -1600
+  rolebinding: -1500
+  patch: -1400
+  job: -1300
+
+operators:
+  jaeger:
+    namespace: openshift-distributed-tracing
