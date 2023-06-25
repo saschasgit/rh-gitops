@@ -4,7 +4,7 @@ metadata:
   name: test
   namespace: {{ $.Values.operators.neuvector.namespace | quote }}
   annotations:
-    argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.configmap | quote }}
+    argocd.argoproj.io/sync-wave: {{ $.Values.sync-waves.configmap | quote }}
 immutable: false
 data:
   test: test

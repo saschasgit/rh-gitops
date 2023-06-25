@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: job-patch-operator-crb
   annotations:
-    argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.rolebinding | quote }}
+    argocd.argoproj.io/sync-wave: {{ $.Values.sync-waves.rolebinding | quote }}
 subjects:
   - kind: ServiceAccount
     name: job-patch-operator-sa
