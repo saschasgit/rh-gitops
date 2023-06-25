@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: a-neuvector-og
+  namespace: a-neuvector
+spec:
+  targetNamespaces:
+  - a-neuvector
