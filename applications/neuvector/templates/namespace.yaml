@@ -5,4 +5,4 @@ metadata:
   annotations:
     argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.namespace | quote }}
   labels:
-    argocd.argoproj.io/managed-by: panda-gitops
+    argocd.argoproj.io/managed-by: openshift-gitops
