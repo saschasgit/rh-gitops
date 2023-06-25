@@ -7,6 +7,7 @@ syncwaves:
   rolebinding: -1500
   patch: -1400
   job: -1300
+  configmap: -1200
 
 operators:
   neuvector:
