@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.job | quote }}
+  name: wait-servicemesh-crd
+  namespace: {{ $.Values.operators.jaeger.namespace | quote }}
+spec:
+  selector: {}
+  template:
+    metadata:
+      name: wait-servicemesh-crd
+    spec:
+      containers:
+        - name: wait-servicemesh-crd
+          image: registry.redhat.io/openshift4/ose-cli
+          command:
+            - /bin/bash
+            - -c
+            - |
+              export HOME=/tmp/clo
+              echo ""
+              echo -n "Waiting for the Jaeger CRD to be available."
+              until oc wait --for condition=established --timeout=60s crd/jaegers.jaegertracing.io -n {{ $.Values.operators.jaeger.namespace | quote }}
+              do
+                echo -n "---still waiting"
+                sleep $SLEEP
+              done
+              echo -n "Waiting for the Kiali CRD to be available."
+              until oc wait --for condition=established --timeout=60s crd/kialis.kiali.io -n openshift-operators
+              do
+                echo -n "---still waiting"
+                sleep $SLEEP
+              done
+              echo -n "Waiting for the ServiceMeshControlPlance CRD to be available."
+              until oc wait --for condition=established --timeout=60s crd/servicemeshcontrolplanes.maistra.io -n openshift-operators
+              do
+                echo -n "---still waiting"
+                sleep $SLEEP
+              done
+              echo -n "DONE"
+          env:
+          - name: SLEEP
+            value: "5"
+      restartPolicy: OnFailure
+      serviceAccount: job-wait-servicemesh-operator-sa
+      serviceAccountName: job-wait-servicemesh-operator-sa
+      terminationGracePeriodSeconds: 30            
