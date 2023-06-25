@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: test
+  namespace: {{ $.Values.operators.neuvector.namespace | quote }}
+  annotations:
+    argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.configmap | quote }}
+immutable: false
+data:
+  test: test
