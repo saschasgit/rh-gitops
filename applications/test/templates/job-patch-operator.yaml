@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.patch | quote }}
+  name: patch-neuvector-operators
+  namespace: {{ $.Values.operators.neuvector.namespace | quote }}
+spec:
+  selector: {}
+  template:
+    metadata:
+      name: patch-neuvector-operators
+    spec:
+      containers:
+        - name: patch-neuvector-operators
+          image: registry.redhat.io/openshift4/ose-cli
+          command:
+            - /bin/bash
+            - -c
+            - |
+              export HOME=/tmp/clo
+              echo ""
+              echo -n "Wait 10s and patching the approval for the operators of Neuvector."
+              sleep $SLEEP
+              oc get installplan -n {{ $.Values.operators.neuvector.namespace | quote }} -l operators.coreos.com/jaeger-product.openshift-distributed-tracing= -oname | xargs -r -n 1 oc -n {{ $.Values.operators.jaeger.namespace | quote }} patch --type json --patch '[{"op": "replace", "path": "/spec/approved", "value": true}]'
+              echo -n "DONE"
+          env:
+          - name: SLEEP
+            value: "10"
+      restartPolicy: OnFailure
+      serviceAccount: job-patch-operator-sa
+      serviceAccountName: job-patch-operator-sa
+      terminationGracePeriodSeconds: 30            

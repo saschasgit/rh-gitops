@@ -3,6 +3,8 @@ kind: OperatorGroup
 metadata:
   name: a-neuvector-og
   namespace: a-neuvector
+  annotations:
+    argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.operatorgroup | quote }}
 spec:
   targetNamespaces:
   - a-neuvector

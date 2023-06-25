@@ -3,5 +3,5 @@ kind: ServiceAccount
 metadata:
   annotations:
     argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.serviceaccount | quote }}
-  name: job-wait-servicemesh-operator-sa
-  namespace: {{ $.Values.operators.jaeger.namespace | quote }}
+  name: job-wait-neuvector-operator-sa
+  namespace: {{ $.Values.operators.neuvector.namespace | quote }}

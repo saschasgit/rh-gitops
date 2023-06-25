@@ -4,4 +4,4 @@ metadata:
   annotations:
     argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.serviceaccount | quote }}
   name: job-patch-operator-sa
-  namespace: {{ $.Values.operators.jaeger.namespace | quote }}
+  namespace: {{ $.Values.operators.neuvector.namespace | quote }}

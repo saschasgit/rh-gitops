@@ -9,5 +9,5 @@ syncwaves:
   job: -1300
 
 operators:
-  jaeger:
-    namespace: openshift-distributed-tracing
+  neuvector:
+    namespace: a-neuvector
