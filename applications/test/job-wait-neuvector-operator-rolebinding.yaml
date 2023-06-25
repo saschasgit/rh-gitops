@@ -1,0 +1,14 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: job-wait-servicemesh-operator-crb
+  annotations:
+    argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.rolebinding | quote }}
+subjects:
+  - kind: ServiceAccount
+    name: job-wait-servicemesh-operator-sa
+    namespace: {{ $.Values.operators.jaeger.namespace | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: job-wait-servicemesh-operator-role
