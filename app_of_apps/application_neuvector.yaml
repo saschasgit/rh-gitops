@@ -11,5 +11,3 @@ spec:
     path: applications/neuvector
     repoURL: 'https://github.com/saschasgit/rh-gitops.git'
     targetRevision: HEAD
-  syncPolicy:
-    syncOptions:
