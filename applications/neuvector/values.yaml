@@ -10,4 +10,4 @@ syncwaves:
 
 operators:
   neuvector:
-    namespace: a-neuvector
+    namespace: neuvector

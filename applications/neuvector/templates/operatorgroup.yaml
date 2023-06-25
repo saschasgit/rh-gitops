@@ -1,10 +1,10 @@
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: a-neuvector-og
-  namespace: a-neuvector
+  name: neuvector-og
+  namespace: {{ $.Values.operators.neuvector.namespace | quote }}
   annotations:
     argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.operatorgroup | quote }}
 spec:
   targetNamespaces:
-  - a-neuvector
+  - {{ $.Values.operators.neuvector.namespace | quote }}

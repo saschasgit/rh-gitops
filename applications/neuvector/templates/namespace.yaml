@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: a-neuvector
+  name: {{ $.Values.operators.neuvector.namespace | quote }}
   annotations:
     argocd.argoproj.io/syncwave: {{ $.Values.syncwaves.namespace | quote }}
   labels:
