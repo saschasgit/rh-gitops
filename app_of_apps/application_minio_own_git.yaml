@@ -9,6 +9,6 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: applications
   source:
-    # path: /
+    path: .
     repoURL: 'https://github.com/saschasgit/minio.git'
     targetRevision: HEAD
