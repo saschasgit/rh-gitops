@@ -1,0 +1,96 @@
+{
+  "uid": "f7da3a82-ce1f-41e2-a5d8-38d44912644e",
+  "kind":
+    { "group": "rbac.authorization.k8s.io", "version": "v1", "kind": "Role" },
+  "resource":
+    {
+      "group": "rbac.authorization.k8s.io",
+      "version": "v1",
+      "resource": "roles",
+    },
+  "requestKind":
+    { "group": "rbac.authorization.k8s.io", "version": "v1", "kind": "Role" },
+  "requestResource":
+    {
+      "group": "rbac.authorization.k8s.io",
+      "version": "v1",
+      "resource": "roles",
+    },
+  "name": "dummy",
+  "namespace": "a-test",
+  "operation": "CREATE",
+  "userInfo":
+    {
+      "username": "kubeadmin",
+      "uid": "23f9168f-fbbe-4c84-bbf0-e4c272c2a3d7",
+      "groups": ["system:authenticated:oauth", "system:authenticated"],
+      "extra": { "scopes.authorization.openshift.io": ["user:full"] },
+    },
+  "roles":
+    [
+      "kube-system:extension-apiserver-authentication-reader",
+      "openshift-config-managed:console-public",
+      "openshift-config-managed:openshift-network-public-role",
+      "openshift-config-managed:system:openshift:oauth-servercert-trust",
+      "openshift-console-user-settings:user-settings-23f9168f-fbbe-4c84-bbf0-e4c272c2a3d7-role",
+      "openshift:copied-csv-viewer",
+      "openshift:shared-resource-viewer",
+    ],
+  "clusterRoles":
+    [
+      "basic-user",
+      "cluster-admin",
+      "cluster-status",
+      "console-extensions-reader",
+      "helm-chartrepos-viewer",
+      "self-access-reviewer",
+      "self-provisioner",
+      "system:basic-user",
+      "system:build-strategy-docker",
+      "system:build-strategy-jenkinspipeline",
+      "system:build-strategy-source",
+      "system:discovery",
+      "system:oauth-token-deleter",
+      "system:openshift:discovery",
+      "system:openshift:public-info-viewer",
+      "system:openshift:scc:restricted-v2",
+      "system:openshift:useroauthaccesstoken-manager",
+      "system:public-info-viewer",
+      "system:scope-impersonation",
+      "system:webhook",
+    ],
+  "object":
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata":
+        {
+          "creationTimestamp": "2023-06-28T10:55:57Z",
+          "managedFields":
+            [
+              {
+                "apiVersion": "rbac.authorization.k8s.io/v1",
+                "fieldsType": "FieldsV1",
+                "fieldsV1": { "f:rules": {} },
+                "manager": "Mozilla",
+                "operation": "Update",
+                "time": "2023-06-28T10:55:57Z",
+              },
+            ],
+          "name": "dummy",
+          "namespace": "a-test",
+          "uid": "420cf652-f2b3-4188-a136-7a43107b5972",
+        },
+      "rules":
+        [
+          {
+            "apiGroups": [""],
+            "resources": ["pods"],
+            "verbs": ["get", "watch", "list"],
+          },
+        ],
+    },
+  "oldObject": null,
+  "dryRun": false,
+  "options": { "apiVersion": "meta.k8s.io/v1", "kind": "CreateOptions" },
+}
