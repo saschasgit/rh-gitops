@@ -1,0 +1,16 @@
+syncwaves:
+  namespace: -2000
+  operatorgroup: -1900
+  subscription: -1800
+  role: -1800
+  serviceaccount: -1800
+  rolebinding: -1800
+  patch: -1800
+  # role: -1700
+  # serviceaccount: -1600
+  # rolebinding: -1500
+  # patch: -1400
+  job: -1300
+  configmap: -1200
+
+namespace: openshift-operators

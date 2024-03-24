@@ -1,0 +1,12 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-terminal
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  project: applications
+  source:
+    path: applications/web-terminal
+    repoURL: 'https://github.com/saschasgit/rh-gitops.git'
+    targetRevision: HEAD

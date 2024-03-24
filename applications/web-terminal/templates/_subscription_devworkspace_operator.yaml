@@ -1,0 +1,144 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  annotations:
+    olm.generated-by: install-5g4zb
+  resourceVersion: '123033'
+  name: devworkspace-operator-fast-redhat-operators-openshift-marketplace
+  uid: 950dfcf5-fd0d-4de5-9fa9-b5e1a758c613
+  creationTimestamp: '2024-03-24T12:59:15Z'
+  generation: 1
+  managedFields:
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:operators.coreos.com/devworkspace-operator.openshift-operators': {}
+      manager: Go-http-client
+      operation: Update
+      time: '2024-03-24T12:59:15Z'
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:olm.generated-by': {}
+        'f:spec':
+          .: {}
+          'f:channel': {}
+          'f:installPlanApproval': {}
+          'f:name': {}
+          'f:source': {}
+          'f:sourceNamespace': {}
+          'f:startingCSV': {}
+      manager: catalog
+      operation: Update
+      time: '2024-03-24T12:59:15Z'
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          'f:installedCSV': {}
+          'f:currentCSV': {}
+          'f:catalogHealth': {}
+          'f:installPlanRef':
+            .: {}
+            'f:apiVersion': {}
+            'f:kind': {}
+            'f:name': {}
+            'f:namespace': {}
+            'f:resourceVersion': {}
+            'f:uid': {}
+          'f:conditions': {}
+          .: {}
+          'f:installplan':
+            .: {}
+            'f:apiVersion': {}
+            'f:kind': {}
+            'f:name': {}
+            'f:uuid': {}
+          'f:lastUpdated': {}
+          'f:state': {}
+      manager: catalog
+      operation: Update
+      subresource: status
+      time: '2024-03-24T12:59:24Z'
+  namespace: openshift-operators
+  labels:
+    operators.coreos.com/devworkspace-operator.openshift-operators: ''
+spec:
+  channel: fast
+  installPlanApproval: Automatic
+  name: devworkspace-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: devworkspace-operator.v0.26.0
+status:
+  catalogHealth:
+    - catalogSourceRef:
+        apiVersion: operators.coreos.com/v1alpha1
+        kind: CatalogSource
+        name: certified-operators
+        namespace: openshift-marketplace
+        resourceVersion: '121523'
+        uid: 4f7dd1d2-c096-4b6f-a255-c539ec3c1d17
+      healthy: true
+      lastUpdated: '2024-03-24T12:59:16Z'
+    - catalogSourceRef:
+        apiVersion: operators.coreos.com/v1alpha1
+        kind: CatalogSource
+        name: community-operators
+        namespace: openshift-marketplace
+        resourceVersion: '121521'
+        uid: b3635e3e-80d9-4d93-8ee5-431989021764
+      healthy: true
+      lastUpdated: '2024-03-24T12:59:16Z'
+    - catalogSourceRef:
+        apiVersion: operators.coreos.com/v1alpha1
+        kind: CatalogSource
+        name: redhat-marketplace
+        namespace: openshift-marketplace
+        resourceVersion: '120545'
+        uid: 0269c4ac-9d34-4a83-9d2e-2296b9380883
+      healthy: true
+      lastUpdated: '2024-03-24T12:59:16Z'
+    - catalogSourceRef:
+        apiVersion: operators.coreos.com/v1alpha1
+        kind: CatalogSource
+        name: redhat-operators
+        namespace: openshift-marketplace
+        resourceVersion: '119197'
+        uid: b67d352f-065c-4490-8e51-d97a87ffdf85
+      healthy: true
+      lastUpdated: '2024-03-24T12:59:16Z'
+  conditions:
+    - lastTransitionTime: '2024-03-24T12:59:16Z'
+      message: all available catalogsources are healthy
+      reason: AllCatalogSourcesHealthy
+      status: 'False'
+      type: CatalogSourcesUnhealthy
+    - status: 'False'
+      type: BundleUnpacking
+    - lastTransitionTime: '2024-03-24T12:59:23Z'
+      reason: Installing
+      status: 'True'
+      type: InstallPlanPending
+  currentCSV: devworkspace-operator.v0.26.0
+  installPlanRef:
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: InstallPlan
+    name: install-5g4zb
+    namespace: openshift-operators
+    resourceVersion: '122704'
+    uid: 95524254-4901-41d4-8dd7-ff7d1a40c131
+  installedCSV: devworkspace-operator.v0.26.0
+  installplan:
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: InstallPlan
+    name: install-5g4zb
+    uuid: 95524254-4901-41d4-8dd7-ff7d1a40c131
+  lastUpdated: '2024-03-24T12:59:23Z'
+  state: AtLatestKnown

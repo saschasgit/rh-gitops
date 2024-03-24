@@ -1,0 +1,15 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/web-terminal.openshift-operators: ''
+  annotations:
+    argocd.argoproj.io/sync-wave: {{ $.Values.syncwaves.subscription | quote }}
+  name: web-terminal
+  namespace: {{ $.Values.namespace | quote }}
+spec:
+  channel: fast
+  installPlanApproval: Manual
+  name: web-terminal
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
